@@ -1,7 +1,7 @@
 import { Collection, Db, ObjectId } from "mongodb";
 import { UpsertVoteRequest, Vote, VoteSummary, VoteSummaryEntry } from "../entity/vote";
 
-export declare abstract class VoteRepository {
+export abstract class VoteRepository {
   abstract getDistinctNames(): Promise<string[]>;
   abstract getByUser(userId: string): Promise<Vote|null>;
   abstract getSummary(): Promise<VoteSummary>;

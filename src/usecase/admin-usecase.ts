@@ -6,8 +6,9 @@ import { VoteSummary } from "../entity/vote";
 import { UserRepository } from "../repository/user-repository";
 import { VoteRepository } from "../repository/vote-repository";
 import { AuthConfig } from '../entity/auth';
+import { generateRandomString } from '../utils/random';
 
-export declare abstract class AdminUsecase {
+export abstract class AdminUsecase {
   abstract getUsers(page: number, size: number): Promise<PaginatedResponse<User>>;
   abstract createUser(username: string): Promise<User>;
   abstract getVoteSummary(): Promise<VoteSummary>;

@@ -2,9 +2,10 @@ import dotenv from 'dotenv';
 
 export type Config = {
   port: number;
-  // mongodb: {
-  //   url: string;
-  // }
+  mongodb: {
+    url: string;
+    database: string;
+  }
 }
 
 type Optional<T extends string|number, B extends boolean> = B extends true ? T : T|null;
@@ -49,6 +50,10 @@ export function loadConfig(): Config {
 
   return {
     port: envInt('PORT') || 31001,
+    mongodb: {
+      url: env('MONGODB_URL', true),
+      database: env('MONGODB_DATABASE') || 'octomate_voting',
+    }
   }
 }
 

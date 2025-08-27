@@ -1,4 +1,4 @@
-export type AppErrorType = 'NOT_FOUND'|'VALIDATION'|'INVALID_ARGUMENT';
+export type AppErrorType = 'NOT_FOUND'|'VALIDATION'|'INVALID_ARGUMENT'|'UNAUTHORIZED'|'FORBIDDEN';
 
 export type AppErrorDetail = {
   field: string;

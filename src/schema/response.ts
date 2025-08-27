@@ -1,3 +1,4 @@
+import { Request, Response } from "express";
 import { AppError } from "../entity/error";
 
 export type APIErrorResponsePayload = {
@@ -23,17 +24,21 @@ export class APIErrorResponse extends Error {
     this.details = payload.details || [];
   }
 
-  public toJSON(): string {
-    return JSON.stringify({
+  public toJSON() {
+    return {
       code: this.code,
       message: this.message,
       details: this.details || [],
-    } satisfies APIErrorResponsePayload)
+    }
   }
 
   public static fromAppError(err: AppError): APIErrorResponse {
     const code: number = 
-      err.errorType === 'NOT_FOUND' 
+      err.errorType === 'UNAUTHORIZED'
+      ? 10001
+      : err.errorType === 'FORBIDDEN'
+      ? 10003
+      : err.errorType === 'NOT_FOUND' 
       ? 20004
       : err.errorType === 'VALIDATION'
       ? 22000
@@ -84,4 +89,20 @@ export class APIErrorResponse extends Error {
       ],
     })
   }
+}
+
+export function handleError(res: Response, err: unknown) {
+  const apiErr = APIErrorResponse.fromError(err);
+  const statusCode = 
+    apiErr.code > 90000 
+    ? 500 
+    : apiErr.code === 22000 
+    ? 422 
+    : apiErr.code === 10001
+    ? 401
+    : apiErr.code === 10003
+    ? 403
+    : 400
+  ;
+  res.status(statusCode).json(apiErr);
 }

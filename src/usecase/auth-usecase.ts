@@ -4,7 +4,7 @@ import { AuthConfig, JWTClaims, LoginResponse } from "../entity/auth";
 import { AppError } from "../entity/error";
 import { UserRepository } from "../repository/user-repository";
 
-export declare abstract class AuthUsecase {
+export abstract class AuthUsecase {
   abstract loginUser(username: string, password: string): Promise<LoginResponse>;
   abstract loginAdmin(username: string, password: string): Promise<LoginResponse>;
 }
@@ -17,10 +17,10 @@ export class AuthUsecaseImpl extends AuthUsecase {
     super();
   }
 
-  private generate(sub: string, typ: string): LoginResponse {
+  private generate(sub: string, utyp: string): LoginResponse {
     const now = new Date();
     const nowUnix = Math.floor(now.getTime()/1000);
-    const exp = new Date(now.getTime() + this.config.accessTokenDuration * 3600);
+    const exp = new Date(now.getTime() + this.config.accessTokenDuration * 3600 * 1000);
     const expUnix = Math.floor(exp.getTime()/1000);
 
     const claims: JWTClaims = {
@@ -30,7 +30,7 @@ export class AuthUsecaseImpl extends AuthUsecase {
       exp: expUnix,
       nbf: nowUnix,
       iat: nowUnix,
-      typ,
+      utyp,
       jti: '', // could be filled later
     }
     const claimsStr = jwt.sign(claims, this.config.jwtSecret);

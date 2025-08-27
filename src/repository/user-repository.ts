@@ -2,7 +2,7 @@ import { Collection, Db, ObjectId, WithId } from "mongodb";
 import { PaginatedResponse } from "../entity/common";
 import { CreateUserRequest, User } from "../entity/user";
 
-export declare abstract class UserRepository {
+export abstract class UserRepository {
   abstract first(id: string): Promise<User|null>;
   abstract firstByUsername(username: string): Promise<User|null>;
   abstract find(page: number, size: number): Promise<PaginatedResponse<User>>;

@@ -22,5 +22,5 @@ export type JWTRegisteredClaims = {
 }
 
 export type JWTClaims = JWTRegisteredClaims & {
-  typ: string; // Custom user type, should be 'ADMIN'|'USER'
+  utyp: string; // Custom user type, should be 'ADMIN'|'USER'
 }
