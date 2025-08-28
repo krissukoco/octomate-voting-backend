@@ -19,13 +19,7 @@ async function run() {
   try {
     const cfg = loadConfig();
 
-    const authConfig: AuthConfig = {
-      jwtSecret: '995h74flkyy3irmr7x0ayulco71o3pbw',
-      accessTokenDuration: 72,
-      adminUsername: 'admin',
-      adminPassword: 'admin',
-      saltRounds: 10,
-    }
+    const authConfig: AuthConfig = { ...cfg.auth };
 
     const mongoClient = new MongoClient(cfg.mongodb.url);
     const db = mongoClient.db(cfg.mongodb.database);
