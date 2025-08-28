@@ -2,6 +2,33 @@
 
 A robust voting system backend built with Node.js, TypeScript, and MongoDB. This application demonstrates clean architecture principles, comprehensive testing, and secure authentication for a backend engineer position.
 
+## 🌐 Live Demo
+
+**✨ Try the live application without any setup!**
+
+- **Frontend**: [https://octomate-voting.krissukoco.com](https://octomate-voting.krissukoco.com)
+- **Backend API**: [https://octomate-voting-api.krissukoco.com](https://octomate-voting-api.krissukoco.com)
+
+### 🎯 Demo Instructions
+
+1. **Login as Admin** 
+   - Username: `admin`
+   - Password: `admin`
+   
+2. **Create Users**
+   - Use the admin panel to create voting users
+   - Note the generated passwords for each user
+
+3. **Vote as User**
+   - Logout and login with user credentials
+   - Cast your vote for any candidate
+
+4. **View Results**
+   - Login as admin again to see vote summaries and statistics
+   - View real-time vote counts and percentages
+
+> **Note**: This is a live demo environment - feel free to create users and test all functionality!
+
 ## 🚀 Features
 
 - **User Authentication** - JWT-based authentication for users and administrators
@@ -45,7 +72,11 @@ tests/
 - npm or yarn package manager
 - MongoDB (see setup options below)
 
-## 🛠️ Installation & Setup
+## 🛠️ Local Development Setup (Optional)
+
+> **💡 Quick Start**: You can try the application immediately using the [live demo](#-live-demo) above without any local setup!
+
+If you want to run the application locally for development:
 
 ### 1. Clone and Install
 ```bash
@@ -188,17 +219,32 @@ The API uses JWT (JSON Web Tokens) for authentication:
 - **ADMIN**: Can manage users and view vote summaries
 
 ### Example Usage
+
+**Using the Live API:**
 ```bash
 # Login as admin
+curl -X POST https://octomate-voting-api.krissukoco.com/auth/admin/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin"}'
+
+# Use the returned token to get users
+curl -X GET https://octomate-voting-api.krissukoco.com/admin/users \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+
+**Using Local Setup:**
+```bash
+# Login as admin (local)
 curl -X POST http://localhost:8080/auth/admin/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"admin123"}'
+  -d '{"username":"admin","password":"admin"}'
 
-# Use the returned token
+# Use the returned token (local)
 curl -X GET http://localhost:8080/admin/users \
   -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
 ```
-Or use Postman as curl client.
+
+Or use Postman/Insomnia as curl client with either the live or local endpoints.
 
 ## 🗄️ Database Schema
 
