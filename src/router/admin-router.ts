@@ -14,7 +14,7 @@ export function createAdminRouter(
     validate({ query: getUsersQuerySchema }),
     async(req, res) => {
       try {
-        const users = await adminUc.getUsers((req.query as any).page, (req.query as any).size);
+        const users = await adminUc.getUsers(Number((req.query as any).page), Number((req.query as any).size));
         return res.status(200).json({
           list: users.list.map(v => {
             const { password, ...value } = v;

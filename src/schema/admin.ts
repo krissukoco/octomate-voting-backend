@@ -15,7 +15,7 @@ export const getUsersQuerySchema = z.object({
     .default('10')
     .transform(val => parseInt(val, 10))
     .pipe(
-      z.number().min(1, 'Page must be >= 1')
+      z.number().min(1, 'Size must be >= 1')
     ),
 })
 

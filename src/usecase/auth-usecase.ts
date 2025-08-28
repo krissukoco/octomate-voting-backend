@@ -3,10 +3,12 @@ import jwt from 'jsonwebtoken';
 import { AuthConfig, JWTClaims, LoginResponse } from "../entity/auth";
 import { AppError } from "../entity/error";
 import { UserRepository } from "../repository/user-repository";
+import { User } from '../entity/user';
 
 export abstract class AuthUsecase {
   abstract loginUser(username: string, password: string): Promise<LoginResponse>;
   abstract loginAdmin(username: string, password: string): Promise<LoginResponse>;
+  abstract getUser(id: string): Promise<User|null>;
 }
 
 export class AuthUsecaseImpl extends AuthUsecase {
@@ -66,5 +68,10 @@ export class AuthUsecaseImpl extends AuthUsecase {
     }
     const resp = this.generate('admin', 'ADMIN');
     return resp;
+  }
+
+  async getUser(id: string): Promise<User | null> {
+    const user = await this.userRepo.first(id);
+    return user;
   }
 }

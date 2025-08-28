@@ -79,10 +79,10 @@ export class VoteRepositoryImpl extends VoteRepository {
   }
 
   async upsert(data: UpsertVoteRequest): Promise<string> {
-    if (!ObjectId.isValid(data.userId)) {
+    if (!ObjectId.isValid(data.user_id)) {
       throw new Error('invalid userId');
     }
-    const userId = new ObjectId(data.userId);
+    const userId = new ObjectId(data.user_id);
 
     const result = await this.collection.updateOne(
       { user_id: userId },
@@ -112,7 +112,7 @@ export class VoteRepositoryImpl extends VoteRepository {
 function docToVote(doc: VoteDocument): Vote {
   return {
     id: doc._id?.toString() ?? '',
-    userId: doc.user_id.toString(),
+    user_id: doc.user_id.toString(),
     name: doc.name,
     created_at: doc.created_at,
     updated_at: doc.updated_at,

@@ -1,7 +1,7 @@
 import express from 'express';
-import { loadConfig } from './config/index';
+import cors from 'cors';
 
-import authRouter from './router/auth-router';
+import { loadConfig } from './config/index';
 import { MongoClient } from 'mongodb';
 import { UserRepositoryImpl } from './repository/user-repository';
 import { VoteRepositoryImpl } from './repository/vote-repository';
@@ -13,6 +13,7 @@ import createAuthRouter from './router/auth-router';
 import { authMiddleware, userTypeMiddleware } from './middleware/auth';
 import { createAdminRouter } from './router/admin-router';
 import { createVoteRouter } from './router/vote-router';
+import { APIErrorResponse } from './schema/response';
 
 async function run() {
   try {
@@ -44,23 +45,25 @@ async function run() {
     const userMw = userTypeMiddleware('USER');
 
     // Routers
-    const authRouter = createAuthRouter(authUc);
+    const authRouter = createAuthRouter(authConfig, authMw, authUc);
     const adminRouter = createAdminRouter(adminUc);
     const voteRouter = createVoteRouter(voteUc);
     
     const app = express();
     
     app.use(express.json());
+    app.use(cors());
     
     app.use('/auth', authRouter);
     app.use('/admin', authMw, adminMw, adminRouter);
     app.use('/vote', authMw, userMw, voteRouter);
     
     app.use((_, res) => {
-      res.status(404).json({
+      res.status(404).json(new APIErrorResponse({
         code: 20004,
         message: 'Not Found',
-      })
+        details: [],
+      }))
     })
     
     app.listen(cfg.port, () => {

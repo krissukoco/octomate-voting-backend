@@ -24,6 +24,6 @@ export class VoteUsecaseImpl extends VoteUsecase {
   }
 
   async vote(userId: string, name: string): Promise<string> {
-    return await this.voteRepo.upsert({ userId, name });
+    return await this.voteRepo.upsert({ user_id: userId, name });
   }
 }

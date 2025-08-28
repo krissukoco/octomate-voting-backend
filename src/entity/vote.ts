@@ -1,7 +1,7 @@
 import { BaseCreate, BaseEntity } from "./common";
 
 export type Vote = BaseEntity & {
-  userId: string;
+  user_id: string;
   name: string;
 }
 

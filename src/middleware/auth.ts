@@ -18,7 +18,7 @@ export function authMiddleware(
         throw new AppError('UNAUTHORIZED', 'Unauthorized: authorization header invalid');
       }
       const claims = jwt.verify(spl[1], jwtSecret) as JWTClaims;
-      console.info('claims: ', claims);
+      // console.info('claims: ', claims);
       res.locals.auth = claims;
       next();
     } catch(e) {
