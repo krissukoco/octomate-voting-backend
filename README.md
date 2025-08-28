@@ -1,0 +1,292 @@
+# Octomate Voting Backend - Technical Test
+
+A robust voting system backend built with Node.js, TypeScript, and MongoDB. This application demonstrates clean architecture principles, comprehensive testing, and secure authentication for a backend engineer position.
+
+## 🚀 Features
+
+- **User Authentication** - JWT-based authentication for users and administrators
+- **Vote Management** - Create, update, and view votes with real-time vote counting
+- **Admin Panel** - User creation and vote summary analytics
+- **Secure API** - Role-based access control and input validation
+- **Comprehensive Testing** - 142 tests with 87.85% code coverage
+
+## 🏗️ Project Structure
+
+The project follows Clean Architecture principles with clear separation of concerns:
+
+```
+src/
+├── config/          # Configuration management and environment variables
+├── entity/          # Domain entities and type definitions
+├── middleware/      # Express middleware (authentication, validation)
+├── repository/      # Data access layer (MongoDB operations)
+├── router/          # API route handlers and HTTP logic  
+├── schema/          # Request/response validation schemas
+├── usecase/         # Business logic layer
+└── utils/           # Utility functions and helpers
+
+tests/
+├── unit/            # Unit tests with mocks
+├── integration/     # Integration tests with real database
+└── utils/           # Test utilities and helpers
+```
+
+### Component Overview
+
+- **Repository Layer** - Handles all database operations with MongoDB
+- **Use Case Layer** - Contains business logic and orchestrates repository calls
+- **Router Layer** - Express.js routes that handle HTTP requests/responses
+- **Middleware** - Authentication, authorization, and request validation
+- **Entities** - TypeScript types and interfaces for data models
+
+## 📋 Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn package manager
+- MongoDB (see setup options below)
+
+## 🛠️ Installation & Setup
+
+### 1. Clone and Install
+```bash
+git clone <repository-url>
+cd octomate-voting-backend
+npm install
+```
+
+### 2. Environment Configuration
+```bash
+cp .env.example .env
+```
+
+Edit `.env` file with your configuration:
+
+**Required Variables:**
+```bash
+ADMIN_USERNAME=your_admin_username
+ADMIN_PASSWORD=your_admin_password
+JWT_SECRET=super-secret-random-string-with-minimum-length-of-32
+MONGODB_URL=mongodb://localhost:27017          # See MongoDB options below
+MONGODB_DATABASE=octomate_voting
+```
+
+**Optional Variables:**
+```bash
+PORT=8080                    # Server port (default: 8080)
+ACCESS_TOKEN_DURATION=72     # JWT token validity in hours (default: 72)
+SALT_ROUNDS=10              # bcrypt salt rounds (default: 10)
+```
+
+### 3. MongoDB Setup Options
+
+Choose **ONE** of the following options:
+
+#### Option A: Docker Compose (Recommended)
+```bash
+# Start MongoDB with Docker
+docker-compose up -d
+
+# Your .env should use:
+MONGODB_URL=mongodb://admin:password@localhost:27017/octomate_voting?authSource=admin
+```
+
+#### Option B: Local MongoDB Installation
+```bash
+# Install MongoDB locally
+# macOS
+brew install mongodb-community
+brew services start mongodb-community
+
+# Ubuntu/Debian
+sudo apt-get install mongodb
+sudo systemctl start mongod
+
+# Your .env should use:
+MONGODB_URL=mongodb://localhost:27017
+```
+
+#### Option C: Provided MongoDB Connection
+Just use my MongoDB:
+```bash
+# Don't worry I'll delete this ASAP. I'm also in free tier ;)
+MONGODB_URL=mongodb+srv://mongo:mongo@rks-cl-1.m0g3ojs.mongodb.net/?retryWrites=true&w=majority&appName=rks-cl-1
+```
+
+### 4. Run the Application
+
+```bash
+# Development mode (with hot reload)
+npm run dev
+
+# Production mode
+npm run build
+npm start
+```
+
+The server will start on `http://localhost:8080` (or your configured PORT).
+
+## 🧪 Testing
+
+This project includes comprehensive test coverage with unit and integration tests.
+
+```bash
+# Run all tests
+npm test
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run only unit tests
+npm run test:unit
+
+# Run only integration tests
+npm run test:integration
+```
+
+### Test Coverage
+- **Repository Layer**: Unit tests with MongoDB Memory Server
+- **Use Case Layer**: Unit tests with mocked dependencies  
+- **Router Layer**: Integration tests with real HTTP requests
+- **Overall Coverage**: 87.85% statement coverage (142 tests)
+
+## 📡 API Endpoints
+
+### Authentication
+```
+POST /auth/user/login    - User login
+POST /auth/admin/login   - Admin login  
+GET  /auth/me           - Get current user info
+```
+
+### Voting (User Access - requires USER token)
+```
+GET  /vote/current      - Get user's current vote
+GET  /vote/options      - Get all available voting options
+POST /vote/             - Create or update vote
+```
+
+### Administration (Admin Access - requires ADMIN token)
+```
+GET  /admin/users       - List all users (paginated)
+POST /admin/users       - Create new user
+GET  /admin/summary     - Get vote summary and statistics
+```
+
+## 🔐 Authentication
+
+The API uses JWT (JSON Web Tokens) for authentication:
+
+1. **Login** via `/auth/user/login` or `/auth/admin/login`
+2. **Include token** in requests: `Authorization: Bearer <token>`
+3. **Token expires** after configured duration (default: 72 hours)
+
+### User Roles
+- **USER**: Can vote and view voting options
+- **ADMIN**: Can manage users and view vote summaries
+
+### Example Usage
+```bash
+# Login as admin
+curl -X POST http://localhost:8080/auth/admin/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'
+
+# Use the returned token
+curl -X GET http://localhost:8080/admin/users \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+Or use Postman as curl client.
+
+## 🗄️ Database Schema
+
+### Users Collection
+```javascript
+{
+  _id: ObjectId,
+  username: String,        // Unique username
+  password: String,        // bcrypt hashed password
+  first_password: String,  // Original password for reference
+  created_at: Date,
+  updated_at: Date
+}
+```
+
+### Votes Collection  
+```javascript
+{
+  _id: ObjectId,
+  user_id: ObjectId,       // Reference to user (unique)
+  name: String,            // Candidate name
+  created_at: Date,
+  updated_at: Date
+}
+```
+
+## 🚀 Development Scripts
+
+```bash
+npm run dev              # Start development server with hot reload
+npm run build           # Build TypeScript to JavaScript
+npm start              # Start production server
+npm test               # Run all tests
+npm run test:coverage  # Run tests with coverage report
+npm run test:unit      # Run only unit tests
+npm run test:integration # Run only integration tests
+npm run test:watch     # Run tests in watch mode
+```
+
+## 🏢 Technical Test Context
+
+This project demonstrates:
+
+- **Clean Architecture** - Separation of concerns with repository/usecase/router layers
+- **Test-Driven Development** - Comprehensive unit and integration tests
+- **TypeScript Proficiency** - Strong typing throughout the application
+- **Security Best Practices** - JWT authentication, password hashing, input validation
+- **API Design** - RESTful endpoints with proper HTTP status codes
+- **Database Design** - Efficient MongoDB schema and indexing
+- **Error Handling** - Comprehensive error management and validation
+- **Documentation** - Clear code structure and API documentation
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+1. **MongoDB Connection Error**
+   - Ensure MongoDB is running (check your chosen setup option)
+   - Verify `MONGODB_URL` in your `.env` file
+   - For Docker: `docker-compose ps` to check container status
+
+2. **Docker Issues**
+   ```bash
+   # Stop and restart containers
+   docker-compose down
+   docker-compose up -d
+   
+   # Check logs
+   docker-compose logs mongodb
+   ```
+
+3. **JWT Token Issues**
+   - Ensure `JWT_SECRET` is at least 32 characters
+   - Check token expiration time
+   - Verify Authorization header format: `Bearer <token>`
+
+4. **Test Failures**
+   - Tests use MongoDB Memory Server (no external DB required)
+   - Run `npm run test:unit` to isolate unit test issues
+   - Ensure ports 8080 is available during integration tests
+
+5. **Port Conflicts**
+   ```bash
+   # Check what's using port 27017 or 8080
+   lsof -i :27017
+   lsof -i :8080
+   
+   # Change ports in .env and docker-compose.yml if needed
+   ```
+
+For any issues, the codebase includes comprehensive error handling and logging to help diagnose problems.
