@@ -81,7 +81,7 @@ export function loadConfig(): Config {
       jwtSecret: min(32, 'JWT_SECRET should have minimum length of 32', env('JWT_SECRET', true)) as string,
       accessTokenDuration: envInt('ACCESS_TOKEN_DURATION') || 72,
       adminUsername: env('ADMIN_USERNAME', true),
-      adminPassword: env('ADMIN_USERNAME', true),
+      adminPassword: env('ADMIN_PASSWORD', true),
       saltRounds: min(8, 'SALT_ROUNDS has to be >= 8', envInt('SALT_ROUNDS') || 10) as number,
     }
   }
