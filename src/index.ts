@@ -64,8 +64,10 @@ async function run() {
       console.info(`Server started on port ${cfg.port}`);
     })
 
-    process.on('SIGINT', () => {
+    process.on('SIGINT', async() => {
       console.info('Shutting down app...');
+      await mongoClient.close()
+      console.info('MongoClient closed');
       process.exit(0);
     })
 
